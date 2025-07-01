@@ -25,4 +25,28 @@ html, body {
     padding: 8px 16px;
     border-radius: 12px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+/* 숫자 마커의 기본 스타일 */
+.number-marker {
+    border-radius: 50%; /* 원형 */
+    width: 30px; /* 크기 */
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 16px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    /* z-index를 높여 지도 위에 확실히 표시되도록 함 */
+    z-index: 1000; 
+}
+/* 보라색 영역의 숫자 마커 스타일 */
+.rival-number-marker {
+    background-color: #FF0000; /* 빨간색 배경으로 변경 */
+    color: #FFFFFF; /* 흰색 텍스트로 변경하여 가독성 높임 */
+}
+/* 초록색 영역의 숫자 마커 스타일 */
+.user-captured-number-marker {
+    background-color: #90EE90; /* 연두색 배경 */
+    color: #333;
 } 

@@ -14,6 +14,8 @@ let polyline = null;
 let territory = null;
 let watchId = null; // setInterval ID를 저장할 변수
 let currentLocationMarker = null; // 현재 위치를 표시할 마커
+let rivalNumberMarker = null; // 경쟁 영토 내 숫자 마커
+let userCapturedNumberMarker = null; // 사용자가 점령한 영역 내 숫자 마커
 
 // 테스트를 위한 목업 위치 (선릉역)
 const mockInitialPosition = { lat: 37.5045, lon: 127.0489 };
@@ -43,8 +45,7 @@ function initMap() {
 
     // 현재 위치에 마커를 표시합니다.
     currentLocationMarker = L.marker([mockInitialPosition.lat, mockInitialPosition.lon]).addTo(map)
-        .bindPopup('현재 위치: 선릉역')
-        .openPopup();
+        .bindPopup('현재 위치: 선릉역');
 
     // UI에 현재 위치 텍스트를 설정합니다.
     locationText.textContent = `현재 위치: 선릉역 (${mockInitialPosition.lat.toFixed(4)}, ${mockInitialPosition.lon.toFixed(4)})`;
@@ -71,6 +72,53 @@ function initMap() {
             fillOpacity: 0.4
         }
     }).addTo(map);
+
+    // 경쟁 영토 중앙에 초기 숫자 10 표시
+    addRivalNumberMarker(rivalGeoJson, 10);
+}
+
+/**
+ * 경쟁 영토 중앙에 숫자를 표시하는 함수
+ * @param {object} polygonGeoJson - Turf.js 폴리곤 GeoJSON 객체
+ * @param {number} number - 표시할 숫자
+ */
+function addRivalNumberMarker(polygonGeoJson, number) {
+    if (rivalNumberMarker && map.hasLayer(rivalNumberMarker)) {
+        map.removeLayer(rivalNumberMarker);
+    }
+    if (!polygonGeoJson) return;
+    const centroid = turf.centroid(polygonGeoJson);
+    const lat = centroid.geometry.coordinates[1];
+    const lon = centroid.geometry.coordinates[0];
+    const customIcon = L.divIcon({
+        className: 'number-marker rival-number-marker',
+        html: String(number),
+        iconSize: [30, 30],
+        iconAnchor: [15, 15]
+    });
+    rivalNumberMarker = L.marker([lat, lon], { icon: customIcon }).addTo(map);
+}
+
+/**
+ * 사용자가 점령한 영역 중앙에 숫자를 표시하는 함수
+ * @param {object} polygonGeoJson - Turf.js 폴리곤 GeoJSON 객체
+ * @param {number} number - 표시할 숫자
+ */
+function addUserTerritoryNumberMarker(polygonGeoJson, number) {
+    if (userCapturedNumberMarker && map.hasLayer(userCapturedNumberMarker)) {
+        map.removeLayer(userCapturedNumberMarker);
+    }
+    if (!polygonGeoJson) return;
+    const centroid = turf.centroid(polygonGeoJson);
+    const lat = centroid.geometry.coordinates[1];
+    const lon = centroid.geometry.coordinates[0];
+    const customIcon = L.divIcon({
+        className: 'number-marker user-captured-number-marker',
+        html: String(number),
+        iconSize: [30, 30],
+        iconAnchor: [15, 15]
+    });
+    userCapturedNumberMarker = L.marker([lat, lon], { icon: customIcon }).addTo(map);
 }
 
 // --- 달리기 관련 함수 ---
@@ -111,6 +159,8 @@ function startRunning() {
             fillOpacity: 0.4
         }
     }).addTo(map);
+
+    addRivalNumberMarker(rivalGeoJson, 10);
 
     path = [];
     currentMockPosition = { ...mockInitialPosition }; // 위치 초기화
@@ -274,6 +324,9 @@ function stopRunning() {
         fillOpacity: 0.4
     }).addTo(map);
 
+    // 사용자 전체 영토 중앙에 숫자 9 표시
+    addUserTerritoryNumberMarker(userGeoJson, 9);
+
     // 달리기 경로 폴리라인을 제거합니다.
     if (polyline && map.hasLayer(polyline)) map.removeLayer(polyline);
 
@@ -316,6 +369,10 @@ function updateButtonUI() {
         locationText.textContent = `현재 위치: 선릉역 (${mockInitialPosition.lat.toFixed(4)}, ${mockInitialPosition.lon.toFixed(4)})`;
         if (currentLocationMarker) {
             currentLocationMarker.setLatLng([mockInitialPosition.lat, mockInitialPosition.lon]);
+        }
+        addRivalNumberMarker(rivalGeoJson, 8);
+        if (userCapturedNumberMarker && map.hasLayer(userCapturedNumberMarker)) {
+            map.removeLayer(userCapturedNumberMarker);
         }
     }
 }
