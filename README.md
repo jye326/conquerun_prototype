@@ -1,6 +1,10 @@
 # 땅따먹기 달리기 : 컨커런 (Conquerun)
 
 ---
+# 배포 URL
+https://jye326.github.io/conquerun_prototype/
+
+---
 # 페르소나
 
 건강을 위해 달리기를 습관화하고 싶은 학생 - 백승주(27)
