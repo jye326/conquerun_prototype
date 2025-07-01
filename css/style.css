@@ -1,0 +1,28 @@
+/* 지도가 화면 전체를 채우도록 스타일을 지정합니다. */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* 스크롤바가 생기지 않도록 합니다. */
+}
+#map {
+    width: 100%;
+    height: 100%;
+}
+/* UI 요소들이 지도 위에 항상 표시되도록 z-index를 설정합니다. */
+.ui-container {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000; /* Leaflet 지도 위에 표시되도록 z-index 값을 높입니다. */
+}
+#button-container {
+    bottom: 30px;
+}
+#location-display-container {
+    top: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 8px 16px;
+    border-radius: 12px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+} 
