@@ -5,33 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>컨커런(Conquerun) 프로토타입 - OpenStreetMap</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Leaflet.js CSS와 JavaScript를 추가합니다. -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-     crossorigin=""/>
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-     crossorigin=""></script>
-    <!-- Turf.js를 추가하여 지리 공간 연산을 수행합니다. -->
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
     <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="bg-gray-100">
-    <div id="map"></div>
-    <div id="location-display-container" class="ui-container">
-        <p id="location-text" class="text-lg font-semibold text-gray-800"></p>
+<div id="map"></div>
+<div id="location-display-container" class="ui-container">
+    <p id="location-text" class="text-lg font-semibold text-gray-800"></p>
+</div>
+<div id="button-container" class="ui-container">
+    <button id="runButton" class="w-48 h-16 bg-green-500 text-white text-xl font-bold rounded-full shadow-lg hover:bg-green-600 focus:outline-none focus:ring-4 focus:ring-green-300 transition-all duration-300 ease-in-out">
+        달리기 시작
+    </button>
+</div>
+<div id="ranking-container" class="ui-container ranking-position">
+    <h2 class="text-xl font-bold mb-2 text-gray-800">랭킹</h2>
+    <ul id="ranking-list" class="list-none p-0 m-0">
+        <li class="ranking-item">
+            <span class="font-semibold">1. 사용자 A</span> - 1200m²
+        </li>
+        <li class="ranking-item">
+            <span class="font-semibold">2. 사용자 B</span> - 1150m²
+        </li>
+        <li class="ranking-item">
+            <span class="font-semibold">3. 사용자 C</span> - 980m²
+        </li>
+    </ul>
+</div>
+<div id="messageModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20">
+    <div class="bg-white p-6 rounded-lg shadow-xl text-center">
+        <p id="messageText" class="text-lg mb-4"></p>
+        <button id="closeModalButton" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">확인</button>
     </div>
-    <div id="button-container" class="ui-container">
-        <button id="runButton" class="w-48 h-16 bg-green-500 text-white text-xl font-bold rounded-full shadow-lg hover:bg-green-600 focus:outline-none focus:ring-4 focus:ring-green-300 transition-all duration-300 ease-in-out">
-            달리기 시작
-        </button>
-    </div>
-    <div id="messageModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20">
-        <div class="bg-white p-6 rounded-lg shadow-xl text-center">
-            <p id="messageText" class="text-lg mb-4"></p>
-            <button id="closeModalButton" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">확인</button>
-        </div>
-    </div>
-    <script src="js/main.js"></script>
+</div>
+<script src="js/main.js"></script>
 </body>
-</html> 
+</html>

@@ -5,6 +5,7 @@ const messageModal = document.getElementById('messageModal');
 const messageText = document.getElementById('messageText');
 const closeModalButton = document.getElementById('closeModalButton');
 const locationText = document.getElementById('location-text');
+const rankingList = document.getElementById('ranking-list'); // 랭킹 리스트 DOM 요소 가져오기
 
 // --- 상태 및 목업 데이터 변수 ---
 let isRunning = false;
@@ -48,7 +49,7 @@ function initMap() {
         .bindPopup('현재 위치: 선릉역');
 
     // UI에 현재 위치 텍스트를 설정합니다.
-    locationText.textContent = `현재 위치: 선릉역 (${mockInitialPosition.lat.toFixed(4)}, ${mockInitialPosition.lon.toFixed(4)})`;
+    locationText.textContent = `현재 위치: 선릉역`;
 
     // Turf.js 연산을 위해 경쟁 영토를 GeoJSON 형태로 변환합니다.
     // Leaflet LatLng 배열을 Turf.js [longitude, latitude] 배열로 변환합니다.
@@ -74,7 +75,9 @@ function initMap() {
     }).addTo(map);
 
     // 경쟁 영토 중앙에 초기 숫자 10 표시
-    addRivalNumberMarker(rivalGeoJson, 10);
+    addRivalNumberMarker(rivalGeoJson, 1500);
+    // 초기 랭킹 데이터를 업데이트합니다.
+    updateRankingDisplay();
 }
 
 /**
@@ -160,7 +163,7 @@ function startRunning() {
         }
     }).addTo(map);
 
-    addRivalNumberMarker(rivalGeoJson, 10);
+    addRivalNumberMarker(rivalGeoJson, 1500);
 
     path = [];
     currentMockPosition = { ...mockInitialPosition }; // 위치 초기화
@@ -332,6 +335,9 @@ function stopRunning() {
 
     // 생성된 영토에 맞게 지도를 조정합니다.
     map.fitBounds(territory.getBounds());
+
+    // 랭킹 데이터를 업데이트합니다. (예시: 임의의 값으로 업데이트)
+    updateRankingDisplay();
 }
 
 // --- 위치 업데이트 콜백 함수 ---
@@ -346,7 +352,7 @@ function onPositionUpdate(position) {
     map.panTo(newPos);
     currentLocationMarker.setLatLng(newPos); // 마커 위치 업데이트
     // UI에 현재 위치 텍스트를 업데이트합니다.
-    locationText.textContent = `현재 위치: 달리는 중... (${lat.toFixed(4)}, ${lon.toFixed(4)})`;
+    locationText.textContent = `현재 위치: 달리는 중...`;
 }
 
 function onPositionError(error) { // 이 함수는 이제 목업 환경에서는 호출되지 않습니다.
@@ -366,11 +372,11 @@ function updateButtonUI() {
         runButton.classList.remove('bg-red-500', 'hover:bg-red-600', 'focus:ring-red-300');
         runButton.classList.add('bg-green-500', 'hover:bg-green-600', 'focus:ring-green-300');
         // 달리기가 끝나면 위치 텍스트를 초기화하고 마커를 초기 위치로 되돌립니다.
-        locationText.textContent = `현재 위치: 선릉역 (${mockInitialPosition.lat.toFixed(4)}, ${mockInitialPosition.lon.toFixed(4)})`;
+        locationText.textContent = `현재 위치: 선릉역`;
         if (currentLocationMarker) {
             currentLocationMarker.setLatLng([mockInitialPosition.lat, mockInitialPosition.lon]);
         }
-        addRivalNumberMarker(rivalGeoJson, 8);
+        addRivalNumberMarker(rivalGeoJson, 1250);
         if (userCapturedNumberMarker && map.hasLayer(userCapturedNumberMarker)) {
             map.removeLayer(userCapturedNumberMarker);
         }
@@ -381,6 +387,35 @@ function updateButtonUI() {
 function showMessage(message) {
     messageText.textContent = message;
     messageModal.classList.remove('hidden');
+}
+
+// 랭킹 디스플레이 업데이트 함수 (예시 데이터 사용)
+function updateRankingDisplay() {
+    // 실제 애플리케이션에서는 서버에서 랭킹 데이터를 가져와야 합니다.
+    // 여기서는 예시를 위해 더미 데이터를 사용합니다.
+    const dummyRankings = [
+        { name: "김민준", area: 1500 },
+        { name: "이서연", area: 1320 },
+        { name: "박지후", area: 1180 },
+        { name: "최예나", area: 1050 },
+        { name: "정우진", area: 990 }
+    ];
+
+    // 랭킹 데이터를 무작위로 섞어서 매번 다르게 보이게 함
+    dummyRankings.sort();
+
+    // 기존 랭킹 리스트 비우기
+    rankingList.innerHTML = '';
+
+    // 새로운 랭킹 항목 추가
+    dummyRankings.forEach((player, index) => {
+        const listItem = document.createElement('li');
+        listItem.classList.add('ranking-item');
+        listItem.innerHTML = `
+            <span class="font-semibold">${index + 1}. ${player.name}</span> - ${player.area}m²
+        `;
+        rankingList.appendChild(listItem);
+    });
 }
 
 // --- 이벤트 리스너 ---
@@ -398,4 +433,4 @@ closeModalButton.addEventListener('click', () => {
 
 // --- 앱 시작 ---
 // DOM이 로드되면 지도를 초기화합니다.
-document.addEventListener('DOMContentLoaded', initMap); 
+document.addEventListener('DOMContentLoaded', initMap);

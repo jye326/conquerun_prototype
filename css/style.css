@@ -12,14 +12,17 @@ html, body {
 /* UI 요소들이 지도 위에 항상 표시되도록 z-index를 설정합니다. */
 .ui-container {
     position: fixed;
-    left: 50%;
-    transform: translateX(-50%);
+    /* transform: translateX(-50%); */ /* 이 속성은 개별적으로 조정될 수 있습니다. */
     z-index: 1000; /* Leaflet 지도 위에 표시되도록 z-index 값을 높입니다. */
 }
 #button-container {
+    left: 50%; /* 버튼 컨테이너는 중앙 정렬 유지 */
+    transform: translateX(-50%);
     bottom: 30px;
 }
 #location-display-container {
+    left: 50%; /* 위치 표시 컨테이너는 중앙 정렬 유지 */
+    transform: translateX(-50%);
     top: 20px;
     background-color: rgba(255, 255, 255, 0.8);
     padding: 8px 16px;
@@ -38,7 +41,7 @@ html, body {
     font-size: 16px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     /* z-index를 높여 지도 위에 확실히 표시되도록 함 */
-    z-index: 1000; 
+    z-index: 1000;
 }
 /* 보라색 영역의 숫자 마커 스타일 */
 .rival-number-marker {
@@ -49,4 +52,30 @@ html, body {
 .user-captured-number-marker {
     background-color: #90EE90; /* 연두색 배경 */
     color: #333;
-} 
+}
+/* 실시간 영토 넓이 랭킹 컨테이너 스타일 */
+#ranking-container {
+    top: 390px; /* 상단에서 90px 아래로 배치하여 위치 정보 아래로 이동 */
+    right: 20px; /* 오른쪽에서 20px 안쪽으로 배치 */
+    width: 100px; /* 너비를 250px에서 200px로 줄여 화면을 덜 가리도록 함 */
+    background-color: rgba(255, 255, 255, 0.8); /* 반투명 배경 */
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    z-index: 1000; /* 지도 위에 표시되도록 z-index를 높게 설정 */
+    box-sizing: border-box; /* 패딩이 너비에 포함되도록 */
+}
+
+.ranking-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.5rem;
+    color: #555;
+}
+
+.ranking-item:last-child {
+    border-bottom: none; /* 마지막 항목의 하단 선 제거 */
+}
