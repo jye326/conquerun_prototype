@@ -1,3 +1,4 @@
+/* css/style.css */
 /* 지도가 화면 전체를 채우도록 스타일을 지정합니다. */
 html, body {
     height: 100%;
@@ -31,25 +32,44 @@ html, body {
 }
 /* 숫자 마커의 기본 스타일 */
 .number-marker {
+    /* 이 컨테이너는 이름과 숫자를 수직으로 정렬하고 마커 그림자를 가집니다. */
+    display: flex;
+    flex-direction: column; /* 세로 정렬 */
+    justify-content: flex-end; /* 내용을 아래쪽으로 정렬하여 이름이 위로 오도록 함 */
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 1000;
+    /* border-radius, width, height, background-color는 .marker-number로 이동 */
+}
+
+.marker-name {
+    font-size: 12px; /* 이름 폰트 크기 */
+    font-weight: normal;
+    color: #FFFFFF; /* 흰색으로 변경하여 잘 보이도록 함 */
+    margin-bottom: 2px; /* 이름과 숫자 사이 간격 */
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    text-shadow: 0 0 3px rgba(0,0,0,0.7); /* 검정색 그림자 추가하여 가독성 높임 */
+}
+
+.marker-number {
     border-radius: 50%; /* 원형 */
-    width: 30px; /* 크기 */
-    height: 30px;
+    width: 30px; /* 원의 크기 */
+    height: 30px; /* 원의 크기 */
     display: flex;
     justify-content: center;
     align-items: center;
     font-weight: bold;
-    font-size: 16px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    /* z-index를 높여 지도 위에 확실히 표시되도록 함 */
-    z-index: 1000;
+    font-size: 16px; /* 숫자 폰트 크기 */
+    /* 배경색과 텍스트 색상은 .rival-number-marker 및 .user-captured-number-marker에서 정의 */
 }
-/* 보라색 영역의 숫자 마커 스타일 */
-.rival-number-marker {
+
+/* 보라색 영역의 숫자 마커 스타일 (실제로는 .marker-number에 적용) */
+.rival-number-marker .marker-number {
     background-color: #FF0000; /* 빨간색 배경으로 변경 */
     color: #FFFFFF; /* 흰색 텍스트로 변경하여 가독성 높임 */
 }
-/* 초록색 영역의 숫자 마커 스타일 */
-.user-captured-number-marker {
+/* 초록색 영역의 숫자 마커 스타일 (실제로는 .marker-number에 적용) */
+.user-captured-number-marker .marker-number {
     background-color: #90EE90; /* 연두색 배경 */
     color: #333;
 }

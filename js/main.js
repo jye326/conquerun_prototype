@@ -1,3 +1,4 @@
+// js/main.js
 // --- DOM 요소 가져오기 ---
 const mapContainer = document.getElementById('map');
 const runButton = document.getElementById('runButton');
@@ -74,18 +75,25 @@ function initMap() {
         }
     }).addTo(map);
 
-    // 경쟁 영토 중앙에 초기 숫자 10 표시
-    addRivalNumberMarker(rivalGeoJson, 1500);
+    addRivalNumberMarker(rivalGeoJson, "김민준", 1500);
     // 초기 랭킹 데이터를 업데이트합니다.
-    updateRankingDisplay();
+    const initialRankings = [
+        { name: "김민준", area: 1500 },
+        { name: "이서연", area: 1320 },
+        { name: "박지후", area: 1050 },
+        { name: "최예나", area: 990 },
+        { name: "나", area: 0 }
+    ];
+    updateRankingDisplay(initialRankings);
 }
 
 /**
  * 경쟁 영토 중앙에 숫자를 표시하는 함수
  * @param {object} polygonGeoJson - Turf.js 폴리곤 GeoJSON 객체
+ * @param {string} name - 표시할 이름
  * @param {number} number - 표시할 숫자
  */
-function addRivalNumberMarker(polygonGeoJson, number) {
+function addRivalNumberMarker(polygonGeoJson, name, number) {
     if (rivalNumberMarker && map.hasLayer(rivalNumberMarker)) {
         map.removeLayer(rivalNumberMarker);
     }
@@ -95,9 +103,9 @@ function addRivalNumberMarker(polygonGeoJson, number) {
     const lon = centroid.geometry.coordinates[0];
     const customIcon = L.divIcon({
         className: 'number-marker rival-number-marker',
-        html: String(number),
-        iconSize: [30, 30],
-        iconAnchor: [15, 15]
+        html: `<div class="marker-name">${name}</div><div class="marker-number">${number}</div>`,
+        iconSize: [50, 70], // Increased height to accommodate name above the circle
+        iconAnchor: [25, 60] // Adjusted anchor to place the bottom (circle) at the coordinates
     });
     rivalNumberMarker = L.marker([lat, lon], { icon: customIcon }).addTo(map);
 }
@@ -105,9 +113,10 @@ function addRivalNumberMarker(polygonGeoJson, number) {
 /**
  * 사용자가 점령한 영역 중앙에 숫자를 표시하는 함수
  * @param {object} polygonGeoJson - Turf.js 폴리곤 GeoJSON 객체
+ * @param {string} name - 표시할 이름
  * @param {number} number - 표시할 숫자
  */
-function addUserTerritoryNumberMarker(polygonGeoJson, number) {
+function addUserTerritoryNumberMarker(polygonGeoJson, name, number) {
     if (userCapturedNumberMarker && map.hasLayer(userCapturedNumberMarker)) {
         map.removeLayer(userCapturedNumberMarker);
     }
@@ -117,9 +126,9 @@ function addUserTerritoryNumberMarker(polygonGeoJson, number) {
     const lon = centroid.geometry.coordinates[0];
     const customIcon = L.divIcon({
         className: 'number-marker user-captured-number-marker',
-        html: String(number),
-        iconSize: [30, 30],
-        iconAnchor: [15, 15]
+        html: `<div class="marker-name">${name}</div><div class="marker-number">${number}</div>`,
+        iconSize: [50, 70], // Increased height to accommodate name above the circle
+        iconAnchor: [25, 60] // Adjusted anchor to place the bottom (circle) at the coordinates
     });
     userCapturedNumberMarker = L.marker([lat, lon], { icon: customIcon }).addTo(map);
 }
@@ -163,7 +172,7 @@ function startRunning() {
         }
     }).addTo(map);
 
-    addRivalNumberMarker(rivalGeoJson, 1500);
+    addRivalNumberMarker(rivalGeoJson, "김민준", 1500);
 
     path = [];
     currentMockPosition = { ...mockInitialPosition }; // 위치 초기화
@@ -327,8 +336,8 @@ function stopRunning() {
         fillOpacity: 0.4
     }).addTo(map);
 
-    // 사용자 전체 영토 중앙에 숫자 9 표시
-    addUserTerritoryNumberMarker(userGeoJson, 9);
+    // 사용자 전체 영토 중앙에 숫자 1180 표시
+    addUserTerritoryNumberMarker(userGeoJson, "나", 1180);
 
     // 달리기 경로 폴리라인을 제거합니다.
     if (polyline && map.hasLayer(polyline)) map.removeLayer(polyline);
@@ -337,7 +346,14 @@ function stopRunning() {
     map.fitBounds(territory.getBounds());
 
     // 랭킹 데이터를 업데이트합니다. (예시: 임의의 값으로 업데이트)
-    updateRankingDisplay();
+    const afterRunRankings = [
+        { name: "김민준", area: 1250 },
+        { name: "이서연", area: 1320 },
+        { name: "나", area: 1180 },
+        { name: "박지후", area: 1050 },
+        { name: "최예나", area: 990 }
+    ];
+    updateRankingDisplay(afterRunRankings);
 }
 
 // --- 위치 업데이트 콜백 함수 ---
@@ -376,7 +392,7 @@ function updateButtonUI() {
         if (currentLocationMarker) {
             currentLocationMarker.setLatLng([mockInitialPosition.lat, mockInitialPosition.lon]);
         }
-        addRivalNumberMarker(rivalGeoJson, 1250);
+        addRivalNumberMarker(rivalGeoJson, "김민준", 1250);
         if (userCapturedNumberMarker && map.hasLayer(userCapturedNumberMarker)) {
             map.removeLayer(userCapturedNumberMarker);
         }
@@ -390,25 +406,25 @@ function showMessage(message) {
 }
 
 // 랭킹 디스플레이 업데이트 함수 (예시 데이터 사용)
-function updateRankingDisplay() {
+function updateRankingDisplay(rankings) {
     // 실제 애플리케이션에서는 서버에서 랭킹 데이터를 가져와야 합니다.
     // 여기서는 예시를 위해 더미 데이터를 사용합니다.
-    const dummyRankings = [
-        { name: "김민준", area: 1500 },
-        { name: "이서연", area: 1320 },
-        { name: "박지후", area: 1180 },
-        { name: "최예나", area: 1050 },
-        { name: "정우진", area: 990 }
-    ];
+    // const dummyRankings = [
+    //     { name: "김민준", area: 1500 },
+    //     { name: "이서연", area: 1320 },
+    //     { name: "박지후", area: 1180 },
+    //     { name: "최예나", area: 1050 },
+    //     { name: "정우진", area: 990 }
+    // ];
 
     // 랭킹 데이터를 무작위로 섞어서 매번 다르게 보이게 함
-    dummyRankings.sort();
+    rankings.sort(); // This sort does not truly randomize. For actual randomization, use a Fisher-Yates shuffle.
 
     // 기존 랭킹 리스트 비우기
     rankingList.innerHTML = '';
 
     // 새로운 랭킹 항목 추가
-    dummyRankings.forEach((player, index) => {
+    rankings.forEach((player, index) => {
         const listItem = document.createElement('li');
         listItem.classList.add('ranking-item');
         listItem.innerHTML = `
